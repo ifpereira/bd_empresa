@@ -165,6 +165,35 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'empresa'
 --
+/*!50003 DROP FUNCTION IF EXISTS `reves` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `reves`(cadena char(255)) RETURNS char(255) CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+	declare cadena_reves char(255) default '';
+    declare contador int default 1;
+    declare tamaño int default length(cadena);
+    
+    while contador<=tamaño do
+		set cadena_reves = concat(substr(cadena,contador,1), cadena_reves);
+        set contador = contador + 1;
+    end while;
+
+RETURN cadena_reves;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `aumenta_salario` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -213,52 +242,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `media_salario` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `media_salario`()
-BEGIN
-    DECLARE fin INT DEFAULT 0;
-	DECLARE salario_aux DOUBLE;
-    DECLARE num_empleados INT default 0;
-    DECLARE suma_total DOUBLE default 0;
-    DECLARE media_salario DOUBLE;
-	DECLARE cursor_media CURSOR FOR SELECT SALARIO FROM EMPLEADOS;
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
-
-SET fin = 0;
-OPEN cursor_media;
-
-loop_: loop 
-		FETCH cursor_media into salario_aux;
-		IF fin THEN
-      		LEAVE loop_;
-    	END IF;
-        
-	set num_empleados = num_empleados + 1;
-	set suma_total = suma_total + salario_aux;
-
-end loop loop_;
-
-set media_salario = suma_total/num_empleados;
-
-select num_empleados AS 'Total Empleados', media_salario AS 'Media Salario';
-
-close cursor_media;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -269,4 +252,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-30 17:13:37
+-- Dump completed on 2021-04-30 17:46:07
